@@ -1,6 +1,6 @@
 # sim2real: Project Plan (for Claude Code)
 
-Status: v5.4, written 2026-10-17 23:26:07 EDT. Replaces v5.3, v5.2, v5.1, v5.0, v4.9 (v4.9 and v4.8 only added the code-path rule, guardrails and the parking lot; backups are not in `archive/plan/`). Replaces plan v4.5 (not archived separately; v4.5 only added the long Math relearning track that v4.6 removes) and v4.4 (kept in `archive/plan/PLAN_v4.4.MD`; v4.3 is in `archive/plan/PLAN_v4.3.MD`; v4.2 is in `archive/plan/PLAN_v4.2.MD`; v4.1 is in `archive/plan/PLAN_v4.1.MD`; v4 is in `archive/plan/PLAN_v4.MD`). Timestamps in this file use the real local date and time (`date "+%Y-%m-%d %H:%M:%S %Z"`). Older plans and logs are in `archive/plan/` and `sim2real_reference_archive.md` (read them only when a past decision must be revisited).
+Status: v5.6, written 2026-11-14 11:20:34 EST. Replaces v5.5 (kept in `archive/plan/PLAN_v5.5.MD`), v5.4 (kept in `archive/plan/PLAN_v5.4.MD`), v5.3, v5.2, v5.1, v5.0, v4.9 (v4.9 and v4.8 only added the code-path rule, guardrails and the parking lot; backups are not in `archive/plan/`). Replaces plan v4.5 (not archived separately; v4.5 only added the long Math relearning track that v4.6 removes) and v4.4 (kept in `archive/plan/PLAN_v4.4.MD`; v4.3 is in `archive/plan/PLAN_v4.3.MD`; v4.2 is in `archive/plan/PLAN_v4.2.MD`; v4.1 is in `archive/plan/PLAN_v4.1.MD`; v4 is in `archive/plan/PLAN_v4.MD`). Timestamps in this file use the real local date and time (`date "+%Y-%m-%d %H:%M:%S %Z"`). Older plans and logs are in `archive/plan/` and `sim2real_reference_archive.md` (read them only when a past decision must be revisited).
 
 Labels used in this file:
 - FOUNDATIONAL = a number or choice we make or measure. Not derivable.
@@ -64,14 +64,14 @@ Read this section first. These are the owner's standing rules.
 | Chapter 0 (intro to MuJoCo and basic physics) | DONE, in `study/ch0_tutorial/` |
 | Plan v4 and reference archive | this file, plus `sim2real_reference_archive.md` |
 | Chapter 1, Stage 1.1 (MuJoCo gimbal rod, checks, plots, GIF) | DONE, notebook `sim2real/ch1_modeling/ch1_modeling.ipynb`. Audited 2026-10-09 12:20:02 EDT (v4.1): geometry, inertia, straightness, growth, energy checks all in the notebook. Owner should re-run it once in Jupyter to refresh saved outputs. |
-| Chapter 1, notebook walkthrough (owner reads the Stage 1.1 notebook part by part, before any hand math) | IN PROGRESS. Part 0 (imports, result folder) and Part 1A (constants) done. Part 1B (XML model) is next, then Part 2 (model checks), 3 (run_fall), 4 (main run and saving), 5 (extra runs and physics checks), 6 (plots), 7 (GIF). The derived constants are being taught one by one: moment of inertia about the center of mass and about the long axis (taught, with the diaginertia naming), the parallel-axis step and OMEGA_UNSTABLE (still to teach). |
-| Chapter 1, Stage 1.2 onward | NOT STARTED |
+| Chapter 1, notebook walkthrough (owner reads the Stage 1.1 notebook part by part, before any hand math) | PAUSED, this is gimbal phase 3, step 9 (Section 2A). Part 0 (imports, result folder) and Part 1A (constants) were done in 2026-10; confirm the resume point with the owner. Part 1B (XML model) is next, then Part 2 (model checks), 3 (run_fall), 4 (main run and saving), 5 (extra runs and physics checks), 6 (plots), 7 (GIF). The derived constants are being taught one by one: moment of inertia about the center of mass and about the long axis (taught, with the diaginertia naming), the parallel-axis step and OMEGA_UNSTABLE (still to teach). |
+| Chapter 1, hand model (Stages 1.2 to 1.8) | THEORY DONE in chat (kinematics, rod axis, inertia, mass matrix M, action principle, Euler-Lagrange, h and g, damping, Coulomb friction, actuator torque; checks against MuJoCo at q = (0.5, 0.8), q_dot = (1, 2)). CODE NOT STARTED. Schedule: Section 2A, gimbal phases 1 to 3. |
 | Chapters 2 and 3 | NOT STARTED |
 | Future direction: realistic rods and edge cases (optional, not a chapter) | PARKED. See Section 8A and `study/parking_lot.md`. |
 | Reading list (Section 9A) | PARKED (not code). See `study/parking_lot.md`. |
 | Prerequisites for 3D rotation (torque, cross product, right-hand rule, inertia tensor) | IN PROGRESS, follows `study/study_plan.md` (Phase 1: read the notebook line by line and fill gaps live, Phase 2: extra concepts such as cross product, right-hand rule, T5, T6, Phase 3: build the system by hand). Torque lessons T1 to T5 are taught in chat; the owner's notes cover through the 3D torque formula. |
 
-**Next action:** follow `study/study_plan.md`. Phase 1: read the notebook from Part 0, line by line, with gaps taught live (Part 1A first: I_zz and its naming, parallel axis, OMEGA_UNSTABLE; Part 1B: inertia tensor, diaginertia). Then Phase 2 (cross product, right-hand rule, T5, T6, the full tensor), then Phase 3 (build the system by hand, Stages 1.2 to 1.8). See Sections 6 and 13.
+**Next action:** gimbal phase 1, step 1: the owner hand-writes the stage A equations (M, h, g, the state form, the RK4 update), codes stage A and sends both for review. Every later step repeats this (hand-write first), including the actuator steps and the noise step 8N. See Section 2A and Section 13.
 
 ---
 
@@ -89,12 +89,61 @@ A stage is CORE only if it ends in a code piece that runs and prints a number or
 | 1.4 | hand kinetic energy T(q, q_dot) and potential energy V(q) | MuJoCo energy readout | |
 | 1.5 | hand Euler-Lagrange equations plus hand RK4, frictionless | MuJoCo trajectories | |
 | 1.6 | damping, Coulomb friction (tanh), motor torque and saturation in the hand simulator | MuJoCo trajectories with them on | |
-| 1.7 | explicit Euler vs RK4 vs semi-implicit, step size, energy drift script | theory (Euler energy factor 1 + omega^2 dt^2) | |
+| 1.7 | explicit Euler vs RK4 vs semi-implicit, step size, energy drift script | theory (Euler energy factor 1 + omega^2 dt^2) | REDUCED (v5.5): RK4 only, no Euler or semi-implicit comparison study |
 | 1.8 | hand linearization: Jacobian, eigenvalues, controllability | +-3.836 1/s, MuJoCo growth check | |
 | 1.9 | hand LQR (Riccati) balancing the rod, then tested on the disturbance suite (impulse pushes in several directions, one constant wind) | hand simulator and MuJoCo | |
 | 1.10 | nondimensionalization script (dimensionless curves collapse) | the dimensional simulation | |
 | 1.11 | noise and sensors in the hand simulator (encoder noise, quantization, delay) plus the disturbance functions (random impulse push, constant wind, later gusts) | noise-free, undisturbed run | |
 | 1.12 | COURSE: MATH441 report | | after 1.1 to 1.11 work |
+
+### Gimbal hand-model phases (v5.5, owner's naming 2026-11-14)
+
+These are the code and validation steps for Stages 1.2 to 1.8. "Gimbal phase 1/2/3" is NOT the same as Phase 1/2/3 in `study/study_plan.md` (the study plan keeps its own numbering).
+
+Theory status: the equations are taught in chat. Equations of motion (q1 outer hinge about x, q2 inner hinge about a2; b = viscous and c = Coulomb in the chat notation, which are c and f in Section 4.2):
+
+M11 q1_ddot + (I_zz - I_p) sin(2 q2) q1_dot q2_dot - U0 sin(q1) cos(q2) = u1 - b q1_dot - c s(q1_dot)
+I_p q2_ddot - 0.5 (I_zz - I_p) sin(2 q2) q1_dot^2 - U0 cos(q1) sin(q2) = u2 - b q2_dot - c s(q2_dot)
+
+with M11 = I_p cos^2(q2) + I_zz sin^2(q2), I_p = m L^2 / 3, U0 = m g L / 2, u_i = gear * clip(ctrl_i, -3, 3) N*m, s(w) = tanh(w / eps). Matrix form: M q_ddot + h + g = tau.
+
+**Hand-write rule (owner, 2026-11-14):** for EVERY step below, the owner first hand-writes the new equations of that step (on paper or in `sim2real/ch1_modeling/notes/`), then codes the step, then sends both for review. Each step adds only what is new. RK4 is the only integrator, no further numerics theory. The u argument (torque) and the noise function exist as placeholders from the start.
+
+**Gimbal phase 1: modeling (hand simulator against MuJoCo, no actuator)**
+
+| Step | Hand-write first | Code | Compared against | Pass rule |
+|---|---|---|---|---|
+| 1 | Stage A: M(q), h, g, the state form y' = f(y, u) with y = (q1, q2, q1_dot, q2_dot), the RK4 update k1 to k4 (u held constant over all four stages) | b = c = 0, u = 0 placeholder, 5 degree start | clean MuJoCo run; check values: M = diag(M11, I_p); qfrc_bias = (-2.30435, -2.92139) at q = (0.5, 0.8), q_dot = (1, 2); first-step q_ddot = (-0.910, +0.905) rad/s^2 | check values to 4 digits, then max abs error <= 1e-6 rad over the whole fall |
+| 2 | Stage B: viscous torque -b q_dot in tau, energy loss dE/dt = -sum b q_dot^2, the new f(y, u) | add viscous damping b | MuJoCo with damping on | max abs error <= 1e-6 rad |
+| 3 | Stage C: Coulomb torque -c tanh(q_dot / eps), eps = 1e-3 rad/s, chatter scale (c / I_p) dt, breakaway tilt c / U0, the new f(y, u) | add Coulomb friction | MuJoCo frictionloss on | max abs error <= 1e-3 rad (model difference: smooth tanh vs MuJoCo constraint friction) |
+| 4 | Overlay: the row alignment rule (saved row k is the state after step k+1) and the error metric max_k |q_hand,k - q_mj,k| | overlay plots | clean MuJoCo run, same start, same dt | per-stage tolerances above |
+
+**Gimbal phase 2: actuator and measurement noise (after phase 1 passes)**
+
+| Step | Hand-write first | Code | Compared against | Pass rule |
+|---|---|---|---|---|
+| 5 | Motor torque: u_i = gear * clip(ctrl_i, -3, 3) N*m as the generalized force on hinge i (no cross-coupling, a2 is perpendicular to x), the full f(y, u), RK4 with u constant per step | open-loop torque test, constant ctrl, saturation at +-3 N*m | MuJoCo motors (gear 1, ctrlrange -3 3) | same as stage A or B |
+| 6 | Hold: u = g(q0) at the start, the static hold limit asin(3 / 4.905) = 37.7 degrees per axis | hold at the 5 degree start (about (+0.302, -0.302) N*m) | MuJoCo with the same constant ctrl | rod stays still in both for the same time; drift is the check on g |
+| 7 | PD: u_i = -kp q_i - kd q_dot_i, the closed loop near upright, the stability condition kp > U0 = 4.905 N*m/rad, damping ratio | PD (e.g. kp = 9.81, kd = 2.52) | MuJoCo with the same law | trajectories agree, rod balanced |
+| 8 | Optional: computed torque u = M (q_dd_des + kd e_dot + kp e) + h + g + B q_dot + C s(q_dot), and why the error then obeys e_dd + kd e_dot + kp e = 0 | computed torque | MuJoCo | optional, owner decides |
+| 8N | Measurement noise: y_tilde_k = q_k + eps_k, eps_k ~ N(0, sigma^2) independent per sample and per angle, sigma = 0.01 rad, added AFTER the simulation to the clean q (the dynamics stay noise-free); mean 0, variance sigma^2; optional encoder quantization with step 2 pi / 4096 (std about 0.00044 rad); differencing noisy angles gives velocity noise sqrt(2) sigma / dt = 14 rad/s, so velocity is not taken that way; link to Chapter 2: sigma is the sigma in Cov ~ sigma^2 (J^T J)^-1 | noise function with a fixed seed (np.random.default_rng(seed)), applied to the saved clean log | check on the noise itself, not against MuJoCo: sample mean of y_tilde - q near 0 and sample std near 0.01 within about sigma / sqrt(2 N) | the overlay (step 4) still uses clean against clean; the noisy data go to Chapter 2 |
+
+**Gimbal phase 3: finish reading `ch1_modeling.ipynb`** (step 9, paused, see Section 2).
+
+Then step 10 (Chapter 2): data design and the fit of theta = (beta, gamma, kappa), see Section 7.
+
+**Decisions (owner, 2026-11-14):**
+
+| Decision | Choice |
+|---|---|
+| Start tilt | 5 degrees, lean direction 45 degrees, same in both simulators; q0 = (-0.0618, +0.0617) rad |
+| Tolerance | fixed before looking: 1e-6 rad for stages A and B, 1e-3 rad for stage C (one tenth of the 0.01 rad sensor noise) |
+| Row alignment | index to index. The saved MuJoCo row 0 is the state after the first mj_step, so the hand simulator also stores the state after each RK4 step. Time label of row k is (k+1) dt |
+| Coulomb smoothing | s(w) = tanh(w / eps), eps = 1e-3 rad/s (chatter scale (c / I_p) dt = 6e-5 rad/s; stability dt (c / eps) / I_p = 0.06) |
+| Control goal order | hold first, then PD, then optional computed torque |
+| Integrator | RK4 only, dt = 0.001 s, same as the MuJoCo XML |
+| Hand-write rule | for every step (including the actuator steps and the noise step 8N) the owner hand-writes that step's new equations before coding it; there is no single up-front step 0 |
+| Parameter vector (step 10) | theta = (beta, gamma, kappa) = (c / I_pivot, f / I_pivot, gear / I_pivot), see Section 7 |
 
 ### Chapter 2: Inverse problem (MATH440)
 
@@ -209,6 +258,10 @@ Conventions:
 | alpha_hold | steepest tilt the motor can resist, arcsin(T_max / (m g L / 2)) | 37.7 | deg | derived (necessary, not sufficient) |
 | r | rod radius (capsule size in the XML) | 0.02 | m | foundational |
 | I_zz | rod inertia about its own long axis, m r^2 / 2 | 2e-4 | kg*m^2 | derived from m and r (computed in the notebook as ROD_MASS * ROD_RADIUS**2 / 2, and the capsule size uses ROD_RADIUS, see flag F10). Was 1e-6, see flag F1 |
+| beta | viscous rate, c / I_pivot (fitted in Chapter 2) | 0.12 | 1/s | derived (v5.5) |
+| gamma | Coulomb rate, f / I_pivot (fitted in Chapter 2) | 0.06 | rad/s^2 | derived (v5.5) |
+| kappa | motor gain, gear / I_pivot (fitted in Chapter 2) | 3.0 | rad/s^2 per N*m | derived (v5.5) |
+| p | gravity rate, U0 / I_pivot = 3 g / (2 L), fixed from geometry, no mass | 14.715 | 1/s^2 | derived (v5.5) |
 
 The two physics checks (growth, energy) run with c = 0 and f = 0 because the theory has neither.
 
@@ -261,7 +314,7 @@ Each stage runs A (implement with MuJoCo), B (derive), C (hand code), D (compare
 | 1.4 | Energy | kinetic energy T(q, q_dot) and potential energy V(q) in the gimbal coordinates. T has a translational part (center of mass moving, mass times speed squared over 2) and a rotational part (angular velocity and the inertia table); the body angular velocity is (q1_dot cos q2, q2_dot, q1_dot sin q2) | Ch1 | |
 | 1.5 | Euler-Lagrange | equations of motion M(q) q_ddot + C(q, q_dot) q_dot + g(q) = tau for two angles, hand RK4 simulator, compare with MuJoCo (frictionless first) | Ch1 ODEs, numerics | |
 | 1.6 | Non-conservative terms | viscous damping, Coulomb friction (smooth tanh model vs MuJoCo constraint friction), motor torque and saturation | Ch1 | |
-| 1.7 | Numerics | explicit Euler vs RK4 vs semi-implicit, energy drift, step-size study (1-DOF Euler energy factor 1 + omega^2 dt^2 is derived) | Ch1 | |
+| 1.7 | Numerics | explicit Euler vs RK4 vs semi-implicit, energy drift, step-size study (1-DOF Euler energy factor 1 + omega^2 dt^2 is derived) | Ch1 | REDUCED (v5.5): RK4 only, no Euler or semi-implicit comparison study |
 | 1.8 | Linearization at upright | Jacobian, eigenvalues (expect +-3.836 1/s per axis), controllability. Derive omega_u = sqrt(m g d / I_pivot) in general form (effective pendulum length I_pivot / (m d)), not only sqrt(1.5 g / L) | Ch1 | |
 | 1.9 | Hand-built LQR | Riccati equation by hand, balance in hand sim and MuJoCo, compare with the PD baseline | | |
 | 1.10 | Nondimensionalization | timescale, dimensionless groups, which effects matter | **Ch4 (important)** | |
@@ -269,6 +322,8 @@ Each stage runs A (implement with MuJoCo), B (derive), C (hand code), D (compare
 | 1.12 | Chapter report | modeling decisions, validation, limits | | |
 
 Unused MATH441 chapters (2, 3, 7, 9) have no natural fit yet. Do not force them.
+
+v5.5 note: the theory for Stages 1.2 to 1.6 was taught in chat (kinematics, inertia, M, action principle, Euler-Lagrange, h and g, damping, friction, actuators). What remains is code and validation, scheduled in Section 2A as gimbal phases 1 to 3. Stage 1.7 is reduced to RK4 only.
 
 ### Study order (v4.7)
 
@@ -318,7 +373,8 @@ Phase 3 corresponds to Stages 1.2 to 1.8 below (and 1.7 numerics for the hand si
 MATH440 link (added v5.1): the class covers linear ill-posed problems (LS and MN, SVD, truncated SVD, Tikhonov, L-curve). In this project they are applied to the Jacobian J of the nonlinear fit at each Gauss-Newton step. Landweber, Kaczmarz and Lanczos are parked (`study/parking_lot.md`).
 
 Notes:
-- **Mass is not identifiable from angle-only data** (DERIVED in the 2D case): scaling (m, c, f, T) by the same factor gives the same trajectory. Only ratios such as c/m, f/m, T/m are identifiable. Redo this analysis for the gimbal before fixing the parameter vector in Stage 2.1.
+- **Mass is not identifiable from angle-only data** (DERIVED in the 2D case): scaling (m, c, f, T) by the same factor gives the same trajectory. Only ratios such as c/m, f/m, T/m are identifiable. The gimbal analysis is done in v5.5, see the next bullet.
+- **Parameter vector for the gimbal (DECIDED v5.5, owner approved 2026-11-14):** theta = (beta, gamma, kappa) = (c / I_pivot, f / I_pivot, gear / I_pivot), shared by both hinges (the XML hinges are identical). Nominal values 0.12 1/s, 0.06 rad/s^2, 3.0 rad/s^2 per N*m. DERIVED: dividing both equations of motion by I_pivot leaves only these three ratios plus two geometry ratios that stay fixed: the gravity rate p = U0 / I_pivot = 3 g / (2 L) = 14.715 1/s^2 (uses L and g only) and zeta = I_zz / I_pivot = 6e-4. Mass drops out of every term, so it is not fitted. WHY THESE THREE: friction and the motor are the quantities most likely to differ between simulator and a real rig, they are what the research question randomizes, and they sit at three different identifiability levels, so the covariance ranking in 2.6 has something to say: kappa is invisible in a passive fall (the torque is zero), beta changes the growth rate by only 1.6 percent (3.836 to 3.776 1/s at c = 0.04), and gamma matters most at small tilt and near rest (breakaway tilt 0.23 degrees). Consequence for Stage 2.1: the data design needs actuated runs, not only passive falls. Extensions (not now): add p if the center of mass or the length is uncertain (Section 8A, 4.1 and 4.6); per-hinge values (6 parameters) if the hinges differ. The 3-parameter size keeps the 'direct SVD is enough' note in Section 2A valid.
 - Chapter 0's script listed mass as an unknown to fit. Use the ratio parameterization instead.
 
 ---
@@ -457,6 +513,8 @@ Later, for Chapter 3 (all MEMORY): PPO (Schulman 2017), the Isaac Gym paper (Mak
 
 | Date and time | Change |
 |---|---|
+| 2026-11-14 11:20:34 EST | v5.6: owner-directed. The single up-front step 0 is removed. Instead EVERY step of gimbal phases 1 and 2 starts with the owner hand-writing that step's new equations (damping, Coulomb, actuator, control laws), then code, then compare. New step 8N (measurement noise: y_tilde = q + eps, eps ~ N(0, sigma^2), sigma = 0.01 rad, added after the clean simulation) in phase 2; step numbers 9 and 10 unchanged. Section 2, 2A and 13 updated. Previous plan: `archive/plan/PLAN_v5.5.MD`. |
+| 2026-11-14 11:18:04 EST | v5.5: owner-directed update. (1) Gimbal hand-model schedule added to Section 2A: gimbal phase 1 (modeling, steps 0 to 4, step 0 = hand-write all equations and the RK4 update first), gimbal phase 2 (actuator, steps 5 to 8), gimbal phase 3 (finish the notebook reading, step 9). These names differ from the study plan's Phases. (2) Decisions recorded: 5 degree start, tolerance 1e-6 rad (A, B) and 1e-3 rad (C) fixed before looking, index-to-index row alignment, tanh(w / eps) with eps = 1e-3 rad/s, control order hold then PD, RK4 only. (3) Stage 1.7 reduced to RK4 only. (4) Gimbal parameter vector fixed: theta = (beta, gamma, kappa) = (c, f, gear) / I_pivot, Sections 7 and 4.2. (5) Sections 2, 6 and 13 updated. Previous plan: `archive/plan/PLAN_v5.4.MD`. |
 | 2026-10-17 23:26:07 EDT | v5.4: housekeeping, no stage changed. Folder paths corrected to the current layout (`study/tutorial/` is now `study/ch0_tutorial/`; folder tree rewritten, `study/ch1_modeling/` added). Inertia tensor row marked IN PROGRESS. Noted that this file is not tracked by git. Notebook state checked: F10 edit is in `ch1_modeling.ipynb`, outputs are cleared, so F10 stays open until the re-run from a restarted kernel. |
 | 2026-10-14 09:24:12 EDT | v5.3: flag F10 applied in `ch1_modeling.ipynb` (capsule size now uses ROD_RADIUS; I_ZZ was already computed). Not re-run yet (MuJoCo not available where the edit was made). Parameter table row for I_zz updated. |
 | 2026-10-14 09:21:13 EDT | v5.2: added the disturbance rule (Section 2A): no result counts as balanced from an undisturbed run alone; fixed disturbance suite for evaluation; disturbance training for Chapter 3 (long episodes, random initial states, random impulse pushes, noise and delay, torque penalty). Stages 1.9, 1.11, tiers 2 and 3, Section 8 metrics and Section 11 updated. No stage added or removed. |
@@ -478,14 +536,8 @@ Later, for Chapter 3 (all MEMORY): PPO (Schulman 2017), the Isaac Gym paper (Mak
 
 ## 13. Immediate next step
 
-**First: study plan Phase 1** (`study/study_plan.md`): read the notebook from Part 0, line by line, with gaps taught live (I_zz and its naming, parallel axis, OMEGA_UNSTABLE, inertia tensor, diaginertia, damping and friction, rotation matrices and the tip formula, gimbal lock). One short lesson per message.
+**Gimbal phase 1, step 1 (stage A):** the owner hand-writes the equations of this step in a notes file (`sim2real/ch1_modeling/notes/`): M(q), h, g, the state form y' = f(y, u), and the RK4 update with u constant over the four stages. Then the owner codes the hand simulator (b = c = 0, u = 0 placeholder, 5 degree start, dt = 0.001 s, RK4, states stored after each step) and sends the notes and the code for review against: the check values and first-step q_ddot in Section 2A, the 1e-6 rad tolerance against the clean MuJoCo run, index-to-index alignment, and the energy drift bound.
 
-**Then: Phase 3** (build the same system by hand, Stages 1.2 to 1.8; the deliverable is a hand simulator matching MuJoCo). **Last: Phase 2**, extra concepts (T5, cross product and right-hand rule with proofs, T6, the full tensor), pulled in earlier only if a step needs one. Apply pending notebook change F10 at the end of Phase 1. Guardrails and the parking lot are in `study/`.
+**Every later step repeats the same loop:** hand-write the new equations, code, compare. Order: steps 2 to 4 (damping, Coulomb, overlay), then phase 2 (steps 5 to 8 actuator, then 8N measurement noise), then gimbal phase 3 (finish reading the notebook), then Chapter 2 with theta = (beta, gamma, kappa).
 
-**Then Stage 1.2: kinematics by hand.**
-- A (already done): MuJoCo geometry check at 4e-16 m.
-- B: derive Rx(q1), Ry(q2), the composition, and the tip formula, with the sign conventions in Section 4.3. Write it in a notes file in `sim2real/ch1_modeling/notes/`.
-- C: hand-coded tip position function with no MuJoCo call, using only numpy.
-- D: compare with the saved MuJoCo tip positions from `result/gimbal_ground_truth_data_<TIMESTAMP>.npz` and state the maximum error.
-
-Propose the first code piece and wait for the owner before building anything further.
+Propose the first code piece and wait for the owner before building anything further. Sync `week5/plan.md` and `research_diary.md` only when the owner asks.
