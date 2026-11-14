@@ -1,6 +1,6 @@
-# sim2real-pendulum
+# sim2real-inverted-pendulum
 
-Learning physical AI by building a sim-to-real pipeline, starting from a simple pendulum. Study notes and small MuJoCo projects live here as I go.
+Learning physical AI by building a sim-to-real pipeline, starting from a simple inverted pendulum. Study notes and small MuJoCo projects live here as I go.
 
 ## Setup
 
