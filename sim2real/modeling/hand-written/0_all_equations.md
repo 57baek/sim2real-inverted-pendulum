@@ -58,7 +58,7 @@ Status words used in the tables:
 
 ## What is ON, OFF or NEW in each step
 
-| Term | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 8N |
+| Term | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
 |---|---|---|---|---|---|---|---|---|---|
 | Gravity torque $\mathbf g(q)$ | on | on | on | on | on | on | on | on | on |
 | Velocity coupling $\mathbf h$ | on | on | on | on | on | on | on | on | on |
@@ -507,7 +507,7 @@ $$I_p\,\ddot q_i+(k_d+b)\,\dot q_i+(k_p-U_0)\,q_i=0$$
 
 **7.3 Stability condition and numbers.** This is a damped oscillator, so it is stable when both coefficients are positive:
 
-$$k_p>U_0=4.905\ \text{N·m/rad},\qquad k_d+b>0$$
+$$k_p>U_0=4.905\ \text{N}\!\cdot\!\text{m/rad},\qquad k_d+b>0$$
 
 $$\omega_n=\sqrt{\frac{k_p-U_0}{I_p}},\qquad \zeta=\frac{k_d+b}{2\sqrt{I_p\,(k_p-U_0)}}$$
 
@@ -611,7 +611,7 @@ You hold a controller that uses the model itself. If tracking is good, the model
 
 ---
 
-# Step 8N (gimbal phase 2): Measurement noise
+# Step 9 (gimbal phase 2): Measurement noise
 
 ## 1. Where we start, what we want, what we get
 
@@ -626,35 +626,35 @@ You hold a controller that uses the model itself. If tracking is good, the model
 
 ## 2. The equations
 
-**8N.1 Gaussian measurement noise**
+**9.1 Gaussian measurement noise**
 
 $$\tilde q_{k,i}=q_{k,i}+\eta_{k,i},\qquad \eta_{k,i}\sim\mathcal N(0,\sigma^2)\ \text{independent for each sample and each angle}$$
 
 $\sigma=0.01$ rad (the value used in the earlier notebook). A fixed random seed makes the run repeatable.
 
-**8N.2 What to check.** With $N$ samples of $\eta$, the sample mean and sample std scatter around $0$ and $\sigma$ by
+**9.2 What to check.** With $N$ samples of $\eta$, the sample mean and sample std scatter around $0$ and $\sigma$ by
 
 $$\text{std error of the mean}=\frac{\sigma}{\sqrt N},\qquad \text{std error of the sample std}\approx\frac{\sigma}{\sqrt{2N}}$$
 
 We pass if both are within 4 standard errors.
 
-**8N.3 Encoder quantization (optional second noise).** A 12-bit encoder reads angles in steps of
+**9.3 Encoder quantization (optional second noise).** A 12-bit encoder reads angles in steps of
 
 $$\Delta_{\text{enc}}=\frac{2\pi}{4096}=1.534\times10^{-3}\ \text{rad},\qquad \tilde q=\Delta_{\text{enc}}\operatorname{round}\!\left(\frac{q}{\Delta_{\text{enc}}}\right)$$
 
 The error is spread evenly over $\pm\Delta_{\text{enc}}/2$, with std $\Delta_{\text{enc}}/\sqrt{12}=4.4\times10^{-4}$ rad. Much smaller than $\sigma$.
 
-**8N.4 Why we do not difference noisy angles to get velocity**
+**9.4 Why we do not difference noisy angles to get velocity**
 
 $$\hat{\dot q}_k=\frac{\tilde q_{k+1}-\tilde q_k}{\Delta t}\ \Rightarrow\ \text{std}=\frac{\sqrt2\,\sigma}{\Delta t}=14.1\ \text{rad/s}$$
 
 The real rates are about 1 rad/s, so the noise is 14 times larger than the signal.
 
-**8N.5 Link to Chapter 2.** The covariance of fitted parameters is approximately
+**9.5 Link to Chapter 2.** The covariance of fitted parameters is approximately
 
 $$\Sigma\approx\sigma^{2}\left(J^{\mathsf T}J\right)^{-1}$$
 
-and $\sigma$ here is exactly the $\sigma$ of 8N.1.
+and $\sigma$ here is exactly the $\sigma$ of 9.1.
 
 | Symbol | Meaning | Unit | Status | Code name |
 |---|---|---|---|---|
@@ -668,9 +668,9 @@ and $\sigma$ here is exactly the $\sigma$ of 8N.1.
 
 ```
 clean angles q (from the PD run) + sigma + seed
-   -> 8N.1 draw eta, add -> noisy angles
-   -> 8N.2 check mean and std of (noisy - clean)
-   -> 8N.3 quantized version, 8N.4 differenced velocity noise
+   -> 9.1 draw eta, add -> noisy angles
+   -> 9.2 check mean and std of (noisy - clean)
+   -> 9.3 quantized version, 9.4 differenced velocity noise
    -> save clean and noisy arrays for Chapter 2
 ```
 

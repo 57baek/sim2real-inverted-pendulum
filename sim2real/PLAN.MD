@@ -1,6 +1,6 @@
 # sim2real: Project Plan (for Claude Code)
 
-Status: v5.7, written 2026-11-14 11:52:42 EST. Replaces v5.6 (kept in `archive/plan/PLAN_v5.6.MD`), v5.5 (kept in `archive/plan/PLAN_v5.5.MD`), v5.4 (kept in `archive/plan/PLAN_v5.4.MD`), v5.3, v5.2, v5.1, v5.0, v4.9 (v4.9 and v4.8 only added the code-path rule, guardrails and the parking lot; backups are not in `archive/plan/`). Replaces plan v4.5 (not archived separately; v4.5 only added the long Math relearning track that v4.6 removes) and v4.4 (kept in `archive/plan/PLAN_v4.4.MD`; v4.3 is in `archive/plan/PLAN_v4.3.MD`; v4.2 is in `archive/plan/PLAN_v4.2.MD`; v4.1 is in `archive/plan/PLAN_v4.1.MD`; v4 is in `archive/plan/PLAN_v4.MD`). Timestamps in this file use the real local date and time (`date "+%Y-%m-%d %H:%M:%S %Z"`). Older plans and logs are in `archive/plan/` and `sim2real_reference_archive.md` (read them only when a past decision must be revisited).
+Status: v5.8, written 2026-11-14 12:09:01 EST. Replaces v5.7 (kept in `archive/plan/PLAN_v5.7.MD`), v5.6 (kept in `archive/plan/PLAN_v5.6.MD`), v5.5 (kept in `archive/plan/PLAN_v5.5.MD`), v5.4 (kept in `archive/plan/PLAN_v5.4.MD`), v5.3, v5.2, v5.1, v5.0, v4.9 (v4.9 and v4.8 only added the code-path rule, guardrails and the parking lot; backups are not in `archive/plan/`). Replaces plan v4.5 (not archived separately; v4.5 only added the long Math relearning track that v4.6 removes) and v4.4 (kept in `archive/plan/PLAN_v4.4.MD`; v4.3 is in `archive/plan/PLAN_v4.3.MD`; v4.2 is in `archive/plan/PLAN_v4.2.MD`; v4.1 is in `archive/plan/PLAN_v4.1.MD`; v4 is in `archive/plan/PLAN_v4.MD`). Timestamps in this file use the real local date and time (`date "+%Y-%m-%d %H:%M:%S %Z"`). Older plans and logs are in `archive/plan/` and `sim2real_reference_archive.md` (read them only when a past decision must be revisited).
 
 Labels used in this file:
 - FOUNDATIONAL = a number or choice we make or measure. Not derivable.
@@ -64,14 +64,14 @@ Read this section first. These are the owner's standing rules.
 | Chapter 0 (intro to MuJoCo and basic physics) | DONE, in `study/ch0_tutorial/` |
 | Plan v4 and reference archive | this file, plus `sim2real_reference_archive.md` |
 | Chapter 1, Stage 1.1 (MuJoCo gimbal rod, checks, plots, GIF) | DONE, notebook `sim2real/modeling/modeling.ipynb` (moved from `ch1_modeling/ch1_modeling.ipynb`; results now in `sim2real/modeling/result/modeling/`). Audited 2026-10-09 12:20:02 EDT (v4.1): geometry, inertia, straightness, growth, energy checks all in the notebook. Owner should re-run it once in Jupyter to refresh saved outputs. |
-| Chapter 1, notebook walkthrough (owner reads the Stage 1.1 notebook part by part, before any hand math) | PAUSED, this is gimbal phase 3, step 9 (Section 2A). Part 0 (imports, result folder) and Part 1A (constants) were done in 2026-10; confirm the resume point with the owner. Part 1B (XML model) is next, then Part 2 (model checks), 3 (run_fall), 4 (main run and saving), 5 (extra runs and physics checks), 6 (plots), 7 (GIF). The derived constants are being taught one by one: moment of inertia about the center of mass and about the long axis (taught, with the diaginertia naming), the parallel-axis step and OMEGA_UNSTABLE (still to teach). |
+| Chapter 1, notebook walkthrough (owner reads the Stage 1.1 notebook part by part, before any hand math) | PAUSED, this is gimbal phase 3, step 10 (Section 2A). Part 0 (imports, result folder) and Part 1A (constants) were done in 2026-10; confirm the resume point with the owner. Part 1B (XML model) is next, then Part 2 (model checks), 3 (run_fall), 4 (main run and saving), 5 (extra runs and physics checks), 6 (plots), 7 (GIF). The derived constants are being taught one by one: moment of inertia about the center of mass and about the long axis (taught, with the diaginertia naming), the parallel-axis step and OMEGA_UNSTABLE (still to teach). |
 | Chapter 1, hand model (Stages 1.2 to 1.8) | THEORY DONE in chat (kinematics, rod axis, inertia, mass matrix M, action principle, Euler-Lagrange, h and g, damping, Coulomb friction, actuator torque; checks against MuJoCo at q = (0.5, 0.8), q_dot = (1, 2)). CODE NOT STARTED. Schedule: Section 2A, gimbal phases 1 to 3. |
 | Chapters 2 and 3 | NOT STARTED |
 | Future direction: realistic rods and edge cases (optional, not a chapter) | PARKED. See Section 8A and `study/parking_lot.md`. |
 | Reading list (Section 9A) | PARKED (not code). See `study/parking_lot.md`. |
 | Prerequisites for 3D rotation (torque, cross product, right-hand rule, inertia tensor) | IN PROGRESS, follows `study/study_plan.md` (Phase 1: read the notebook line by line and fill gaps live, Phase 2: extra concepts such as cross product, right-hand rule, T5, T6, Phase 3: build the system by hand). Torque lessons T1 to T5 are taught in chat; the owner's notes cover through the 3D torque formula. |
 
-**Next action:** gimbal phase 1, step 1: the owner hand-writes the stage A equations (M, h, g, the state form, the RK4 update), codes stage A and sends both for review. Every later step repeats this (hand-write first), including the actuator steps and the noise step 8N. See Section 2A and Section 13.
+**Next action:** gimbal phase 1, step 1: the owner hand-writes the stage A equations (M, h, g, the state form, the RK4 update), codes stage A and sends both for review. Every later step repeats this (hand-write first), including the actuator steps and the noise step 9. See Section 2A and Section 13.
 
 ---
 
@@ -113,7 +113,7 @@ with M11 = I_p cos^2(q2) + I_zz sin^2(q2), I_p = m L^2 / 3, U0 = m g L / 2, u_i 
 
 | Item | Rule |
 |---|---|
-| Hand-driven notebooks | `sim2real/modeling/hand-written/`, one notebook per step, numbered: `1_frictionless_fall`, `2_viscous_damping`, `3_coulomb_friction`, `4_overlay_vs_mujoco`, `5_motor_torque`, `6_gravity_hold`, `7_pd_balance`, `8_computed_torque`, `8N_measurement_noise`. Each new feature or idea increases the number. |
+| Hand-driven notebooks | `sim2real/modeling/hand-written/`, one notebook per step, numbered: `1_frictionless_fall`, `2_viscous_damping`, `3_coulomb_friction`, `4_overlay_vs_mujoco`, `5_motor_torque`, `6_gravity_hold`, `7_pd_balance`, `8_computed_torque`, `9_measurement_noise`. Each new feature or idea increases the number. |
 | Equations | `sim2real/modeling/hand-written/0_all_equations.md` has every equation of every step (variables, unknowns, what is set to 0, plug in and get out, conclusion). The same step sheet is the first cell of its notebook. |
 | Code order in each notebook | equations first (markdown cell), then code with well-named variables, the 5 degree and 45 degree test case, RK4. |
 | MuJoCo reference | `sim2real/modeling/hand-written/mujoco_reference.py` builds the same MuJoCo model as `modeling.ipynb`; it is only used for comparison, never for the hand results. |
@@ -136,11 +136,11 @@ with M11 = I_p cos^2(q2) + I_zz sin^2(q2), I_p = m L^2 / 3, U0 = m g L / 2, u_i 
 | 6 | Hold: u = g(q0) at the start, the static hold limit asin(3 / 4.905) = 37.7 degrees per axis | hold at the 5 degree start (about (+0.302, -0.302) N*m) | MuJoCo with the same constant ctrl | rod stays still in both for the same time; drift is the check on g |
 | 7 | PD: u_i = -kp q_i - kd q_dot_i, the closed loop near upright, the stability condition kp > U0 = 4.905 N*m/rad, damping ratio | PD (e.g. kp = 9.81, kd = 2.52) | MuJoCo with the same law | trajectories agree, rod balanced |
 | 8 | Optional: computed torque u = M (q_dd_des + kd e_dot + kp e) + h + g + B q_dot + C s(q_dot), and why the error then obeys e_dd + kd e_dot + kp e = 0 | computed torque | MuJoCo | optional, owner decides |
-| 8N | Measurement noise: y_tilde_k = q_k + eps_k, eps_k ~ N(0, sigma^2) independent per sample and per angle, sigma = 0.01 rad, added AFTER the simulation to the clean q (the dynamics stay noise-free); mean 0, variance sigma^2; optional encoder quantization with step 2 pi / 4096 (std about 0.00044 rad); differencing noisy angles gives velocity noise sqrt(2) sigma / dt = 14 rad/s, so velocity is not taken that way; link to Chapter 2: sigma is the sigma in Cov ~ sigma^2 (J^T J)^-1 | noise function with a fixed seed (np.random.default_rng(seed)), applied to the saved clean log | check on the noise itself, not against MuJoCo: sample mean of y_tilde - q near 0 and sample std near 0.01 within about sigma / sqrt(2 N) | the overlay (step 4) still uses clean against clean; the noisy data go to Chapter 2 |
+| 9 | Measurement noise: y_tilde_k = q_k + eps_k, eps_k ~ N(0, sigma^2) independent per sample and per angle, sigma = 0.01 rad, added AFTER the simulation to the clean q (the dynamics stay noise-free); mean 0, variance sigma^2; optional encoder quantization with step 2 pi / 4096 (std about 0.00044 rad); differencing noisy angles gives velocity noise sqrt(2) sigma / dt = 14 rad/s, so velocity is not taken that way; link to Chapter 2: sigma is the sigma in Cov ~ sigma^2 (J^T J)^-1 | noise function with a fixed seed (np.random.default_rng(seed)), applied to the saved clean log | check on the noise itself, not against MuJoCo: sample mean of y_tilde - q near 0 and sample std near 0.01 within about sigma / sqrt(2 N) | the overlay (step 4) still uses clean against clean; the noisy data go to Chapter 2 |
 
-**Gimbal phase 3: finish reading `modeling.ipynb`** (step 9, paused, see Section 2).
+**Gimbal phase 3: finish reading `modeling.ipynb`** (step 10, paused, see Section 2).
 
-Then step 10 (Chapter 2): data design and the fit of theta = (beta, gamma, kappa), see Section 7.
+Then step 11 (Chapter 2): data design and the fit of theta = (beta, gamma, kappa), see Section 7.
 
 **Decisions (owner, 2026-11-14):**
 
@@ -152,8 +152,8 @@ Then step 10 (Chapter 2): data design and the fit of theta = (beta, gamma, kappa
 | Coulomb smoothing | s(w) = tanh(w / eps), eps = 1e-3 rad/s (chatter scale (c / I_p) dt = 6e-5 rad/s; stability dt (c / eps) / I_p = 0.06) |
 | Control goal order | hold first, then PD, then optional computed torque |
 | Integrator | RK4 only, dt = 0.001 s, same as the MuJoCo XML |
-| Hand-write rule | for every step (including the actuator steps and the noise step 8N) the owner hand-writes that step's new equations before coding it; there is no single up-front step 0 |
-| Parameter vector (step 10) | theta = (beta, gamma, kappa) = (c / I_pivot, f / I_pivot, gear / I_pivot), see Section 7 |
+| Hand-write rule | for every step (including the actuator steps and the noise step 9) the owner hand-writes that step's new equations before coding it; there is no single up-front step 0 |
+| Parameter vector (step 11) | theta = (beta, gamma, kappa) = (c / I_pivot, f / I_pivot, gear / I_pivot), see Section 7 |
 
 ### Chapter 2: Inverse problem (MATH440)
 
@@ -215,7 +215,7 @@ sim2real-pendulum
 │   ├── plan.md                     <- this file (git tracks it as PLAN.MD)
 │   └── modeling
 │       ├── modeling.ipynb          <- MuJoCo notebook (Stage 1.1)
-│       ├── hand-written/           <- numbered hand-driven notebooks 1 to 8N, 0_all_equations.md, mujoco_reference.py
+│       ├── hand-written/           <- numbered hand-driven notebooks 1 to 9, 0_all_equations.md, mujoco_reference.py
 │       └── result/<notebook name>/ <- each notebook writes into a folder with its own name
 └── study
     ├── study_plan.md, parking_lot.md
@@ -524,6 +524,7 @@ Later, for Chapter 3 (all MEMORY): PPO (Schulman 2017), the Isaac Gym paper (Mak
 
 | Date and time | Change |
 |---|---|
+| 2026-11-14 12:09:01 EST | v5.8: owner-directed. The measurement noise step is now step 9 (notebook `9_measurement_noise.ipynb`, equations 9.1 to 9.5, results in `result/9_measurement_noise/`), previously called 8N. Because of this, finishing the notebook reading (gimbal phase 3) is step 10 and the Chapter 2 fit is step 11. Equation sheets: fixed a math rendering error in 7.3 (a middle dot inside a math block). Previous plan: `archive/plan/PLAN_v5.7.MD`. |
 | 2026-11-14 11:52:42 EST | v5.7: owner-directed. Hand-driven notebooks live in `sim2real/modeling/hand-written/` as numbered files (1 to 8N, see Section 2A), results go to `sim2real/modeling/result/<notebook name>/`. New `0_all_equations.md` with every equation per step. All nine notebooks were run in the assistant's environment against MuJoCo 3.17.0 (all pass rules passed: stage A 4.4e-16 rad, B 4.4e-16 rad, C 4.1e-4 rad); not yet run on the owner's machine. Previous plan: `archive/plan/PLAN_v5.6.MD`. |
 | 2026-11-14 11:20:34 EST | v5.6: owner-directed. The single up-front step 0 is removed. Instead EVERY step of gimbal phases 1 and 2 starts with the owner hand-writing that step's new equations (damping, Coulomb, actuator, control laws), then code, then compare. New step 8N (measurement noise: y_tilde = q + eps, eps ~ N(0, sigma^2), sigma = 0.01 rad, added after the clean simulation) in phase 2; step numbers 9 and 10 unchanged. Section 2, 2A and 13 updated. Previous plan: `archive/plan/PLAN_v5.5.MD`. |
 | 2026-11-14 11:18:04 EST | v5.5: owner-directed update. (1) Gimbal hand-model schedule added to Section 2A: gimbal phase 1 (modeling, steps 0 to 4, step 0 = hand-write all equations and the RK4 update first), gimbal phase 2 (actuator, steps 5 to 8), gimbal phase 3 (finish the notebook reading, step 9). These names differ from the study plan's Phases. (2) Decisions recorded: 5 degree start, tolerance 1e-6 rad (A, B) and 1e-3 rad (C) fixed before looking, index-to-index row alignment, tanh(w / eps) with eps = 1e-3 rad/s, control order hold then PD, RK4 only. (3) Stage 1.7 reduced to RK4 only. (4) Gimbal parameter vector fixed: theta = (beta, gamma, kappa) = (c, f, gear) / I_pivot, Sections 7 and 4.2. (5) Sections 2, 6 and 13 updated. Previous plan: `archive/plan/PLAN_v5.4.MD`. |
@@ -548,7 +549,7 @@ Later, for Chapter 3 (all MEMORY): PPO (Schulman 2017), the Isaac Gym paper (Mak
 
 ## 13. Immediate next step
 
-**Owner:** open `sim2real/modeling/hand-written/0_all_equations.md` and read it with the notebooks (1 to 8N). Run `1_frictionless_fall.ipynb` first on your machine (it needs `mujoco_reference.py` in the same folder) and confirm that stage A prints PASS.
+**Owner:** open `sim2real/modeling/hand-written/0_all_equations.md` and read it with the notebooks (1 to 9). Run `1_frictionless_fall.ipynb` first on your machine (it needs `mujoco_reference.py` in the same folder) and confirm that stage A prints PASS.
 
 **Then:** read the step sheets one at a time, run each notebook, and say where the equations or the code are unclear. Hand-writing rule: before each later step, write that step's equations yourself and compare with the sheet.
 
