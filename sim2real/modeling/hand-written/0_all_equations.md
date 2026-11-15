@@ -422,7 +422,7 @@ You hold a simulator that responds to torque and saturates like the real motors.
 
 ---
 
-# Step 6 (gimbal phase 2): Hold the rod with the gravity torque
+# Step 6 (gimbal phase 2): Hold the rod with the gravity torque, open loop
 
 ## 1. Where we start, what we want, what we get
 
@@ -480,7 +480,7 @@ The rod stays put because the motor cancels gravity at exactly one configuration
 
 ---
 
-# Step 7 (gimbal phase 2): PD feedback to balance the rod
+# Step 7 (gimbal phase 2): PD feedback to balance the rod, closed loop
 
 ## 1. Where we start, what we want, what we get
 
@@ -543,7 +543,7 @@ You hold a balanced rod. The closed loop turns the unstable growth rate of $+3.8
 
 ---
 
-# Step 8 (gimbal phase 2, optional): Computed torque tracking
+# Step 8 (gimbal phase 2, optional): Computed torque tracking, closed loop
 
 ## 1. Where we start, what we want, what we get
 
